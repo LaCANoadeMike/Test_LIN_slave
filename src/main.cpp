@@ -3,11 +3,6 @@
 #include <lin_stack.h>
 #include <DueTimer.h>
 
-#define L_PLAY 10
-#define L_PAUSE 11
-#define L_STOP 12
-byte togle = 1;
-
 lin_stack LIN1(1); // 1 - channel, ident - Identification Byte
 
 bool ledOn = false;
@@ -15,22 +10,19 @@ uint8_t counterR = 0;
 uint8_t counterG = 0;
 uint8_t counterB = 0;
 void LinSend(int adress, byte intensidad, byte Rojo, byte Verde, byte Azul, byte diming, byte grupo);
+
 void Timerled();
 
 void setup()
 {
   // put your setup code here, to run once:
 
+  //activar el transceiver de LIN
   pinMode(8, OUTPUT);    // LIN 8
   digitalWrite(8, HIGH); // LIN 8
-  pinMode(13, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   Serial.begin(9600);
-
-  // retroiluminados
-  pinMode(L_PLAY, OUTPUT);
-  pinMode(L_PAUSE, OUTPUT);
-  pinMode(L_STOP, OUTPUT);
 
   Timer3.attachInterrupt(Timerled);
   Timer3.start(500000); // Calls every 500ms
@@ -73,7 +65,7 @@ void loop()
 void Timerled()
 {
   ledOn = !ledOn;
-  digitalWrite(L_PAUSE, ledOn);
+  digitalWrite(LED_BUILTIN, ledOn);
 }
 
 void LinSend(int adress, byte intensidad, byte Rojo, byte Verde, byte Azul, byte diming, byte grupo)
